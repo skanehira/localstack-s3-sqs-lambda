@@ -2,19 +2,11 @@ terraform {
   backend "local" {}
 }
 
-variable "access_key" {
-  type = string
-}
-
-variable "secret_key" {
-  type = string
-}
-
 # LocalStackへデプロイするためのプロバイダ設定
 provider "aws" {
   region     = "ap-northeast-1"
-  access_key = var.access_key
-  secret_key = var.secret_key
+  access_key = "x"
+  secret_key = "x"
 
   s3_use_path_style           = true
   skip_credentials_validation = true
@@ -34,14 +26,8 @@ provider "aws" {
 # S3バケットの設定
 # バケットを作成し通知設定としてSQSを指定する
 ###################################################
-resource "random_string" "bucket_name_suffix" {
-  length  = 10
-  special = false
-  upper   = false
-}
-
 resource "aws_s3_bucket" "test_bucket" {
-  bucket = "test-bucket-${random_string.bucket_name_suffix.result}"
+  bucket = "test-bucket"
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
@@ -50,7 +36,6 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   queue {
     queue_arn     = aws_sqs_queue.test_queue.arn
     events        = ["s3:ObjectCreated:*"]
-    filter_suffix = ".csv"
   }
 }
 

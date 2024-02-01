@@ -15,5 +15,4 @@ services:
       - SERVICES=s3,lambda,sqs,iam
       - DEBUG=1
     volumes:
-      - "${LOCALSTACK_DATA_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
